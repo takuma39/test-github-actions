@@ -20,7 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20.x, 22.x]
+        # pnpm 11 は Node.js 22.13 以上を必要とするため 20 系は対象外
+        node-version: [22.x, 24.x]
 
     steps:
       - name: Checkout
