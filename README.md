@@ -4,18 +4,21 @@ GitHub Actions を学ぶためのリポジトリです。TypeScript + Vitest で
 
 ## セットアップ
 
+パッケージマネージャは pnpm を使用します。未インストールなら Corepack で有効化できます。
+
 ```bash
-npm install
+corepack enable pnpm
+pnpm install
 ```
 
 ## コマンド
 
-| コマンド             | 内容                             |
-| -------------------- | -------------------------------- |
-| `npm test`           | テストを 1 回実行する            |
-| `npm run test:watch` | ファイル変更を監視してテスト実行 |
-| `npm run typecheck`  | 型チェックのみ（出力なし）       |
-| `npm run build`      | `dist/` に JavaScript を出力     |
+| コマンド              | 内容                             |
+| --------------------- | -------------------------------- |
+| `pnpm test`           | テストを 1 回実行する            |
+| `pnpm run test:watch` | ファイル変更を監視してテスト実行 |
+| `pnpm run typecheck`  | 型チェックのみ（出力なし）       |
+| `pnpm run build`      | `dist/` に JavaScript を出力     |
 
 ## CI（GitHub Actions）
 
@@ -30,9 +33,11 @@ npm install
 
 Node.js 20 / 22 のマトリクスで、以下を順に実行します。
 
-1. `npm ci` — `package-lock.json` どおりに依存をインストール
-2. `npm run typecheck` — 型エラーがないか確認
-3. `npm test` — Vitest でテスト実行
+1. `pnpm install --frozen-lockfile` — `pnpm-lock.yaml` どおりに依存をインストール
+2. `pnpm run typecheck` — 型エラーがないか確認
+3. `pnpm test` — Vitest でテスト実行
+
+pnpm のバージョンは `package.json` の `packageManager` フィールドで固定され、`pnpm/action-setup` がそれを読み取ります。
 
 `concurrency` 設定により、同じ PR に連続で push した場合は古い実行が自動でキャンセルされます。
 
@@ -57,6 +62,7 @@ GitHub 上で PR を作成すると、PR 画面の下部に「Test on Node 20.x 
 ├── src/
 │   ├── calculator.ts           # サンプル実装
 │   └── calculator.test.ts      # サンプルテスト
+├── pnpm-workspace.yaml         # pnpm の設定（ビルドスクリプト許可）
 ├── tsconfig.json
 └── vitest.config.ts
 ```

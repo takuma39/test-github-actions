@@ -4,6 +4,7 @@
   "description": "GitHub Actions を学ぶためのリポジトリ",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",

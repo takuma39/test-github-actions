@@ -1,0 +1,4 @@
+# pnpm 10 以降、依存パッケージのビルドスクリプトは既定で実行されない。
+# vitest が内部で使う esbuild はバイナリ配置のため postinstall が必要なので明示的に許可する。
+allowBuilds:
+  esbuild: true
