@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { add, divide, multiply, subtract } from "./calculator.js";
+import { add, divide, multiply, subtract } from "./calculator";
 
 describe("calculator", () => {
   it("add は 2 つの数を足す", () => {
