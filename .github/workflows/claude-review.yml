@@ -40,8 +40,12 @@ jobs:
         with:
           # サブスク（Pro / Max）方式。従量課金の API キーは使わない
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # .claude/skills/pr-review/SKILL.md を呼び出す
-          prompt: "/pr-review"
-          # 往復回数の上限。差分の取得・コード確認・コメント投稿で消費するため
-          # 10 では足りず打ち切られた。低くしすぎるとレビュー未完で失敗する
-          claude_args: "--max-turns 25"
+          # 進捗を示すコメントを PR に作成し、GitHub のコンテキストを渡す
+          track_progress: true
+          # .claude/skills/pr-review/SKILL.md を呼び出す（引数に PR の場所を渡す）
+          prompt: "/pr-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          # allowedTools を渡さないと Claude はコメントを投稿できず、
+          # レビュー結果を出力しただけで正常終了してしまう
+          claude_args: |
+            --max-turns 25
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(git diff:*)"
