@@ -42,5 +42,6 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # .claude/skills/pr-review/SKILL.md を呼び出す
           prompt: "/pr-review"
-          # 往復回数の上限。利用枠の消費を抑える
-          claude_args: "--max-turns 10"
+          # 往復回数の上限。差分の取得・コード確認・コメント投稿で消費するため
+          # 10 では足りず打ち切られた。低くしすぎるとレビュー未完で失敗する
+          claude_args: "--max-turns 25"
