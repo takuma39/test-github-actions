@@ -14,14 +14,8 @@ concurrency:
 
 jobs:
   test:
-    name: Test on Node ${{ matrix.node-version }}
+    name: Test
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # pnpm 11 は Node.js 22.13 以上を必要とするため 20 系は対象外
-        node-version: [22.x, 24.x]
 
     steps:
       - name: Checkout
@@ -32,10 +26,11 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
+      # pnpm 11 が Node.js 22.13 以上を要求するため 22 系を使う
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
           cache: pnpm
 
       - name: Install dependencies
