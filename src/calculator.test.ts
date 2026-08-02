@@ -3,7 +3,7 @@ import { add, divide, multiply, subtract } from "./calculator";
 
 describe("calculator", () => {
   it("add は 2 つの数を足す", () => {
-    expect(add(1, 2)).toBe(30);
+    expect(add(1, 2)).toBe(3);
   });
 
   it("subtract は 2 つの数を引く", () => {
