@@ -1,0 +1,46 @@
+name: Claude Review
+
+# PR が作成・更新されたときに Claude がレビューコメントを投稿する
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+# 連続 push で古い実行をキャンセルする（サブスクの利用枠を無駄に消費しないため）
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Claude Review
+    runs-on: ubuntu-latest
+    # Draft PR ではレビューしない
+    if: github.event.pull_request.draft == false
+
+    # 暴走時の保険。Claude は数分〜十数分かかることがある
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      # Claude GitHub App のトークンを OIDC 経由で取得するために必須
+      id-token: write
+
+    steps:
+      # .claude/skills/ を読み込ませるために必要。
+      # スキル内で origin/main との差分を取るため全履歴を取得する
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude review
+        uses: anthropics/claude-code-action@v1
+        with:
+          # サブスク（Pro / Max）方式。従量課金の API キーは使わない
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # .claude/skills/pr-review/SKILL.md を呼び出す
+          prompt: "/pr-review"
+          # 往復回数の上限。利用枠の消費を抑える
+          claude_args: "--max-turns 10"

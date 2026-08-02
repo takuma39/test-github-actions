@@ -33,7 +33,7 @@ pnpm install
 
 ### 実行内容
 
-Node.js 22 / 24 のマトリクスで、以下を順に実行します。
+Node.js 22 で、以下を順に実行します。
 
 1. `pnpm install --frozen-lockfile` — `pnpm-lock.yaml` どおりに依存をインストール
 2. `pnpm run typecheck` — 型エラーがないか確認
@@ -53,7 +53,7 @@ git commit -am "テスト用の変更"
 git push -u origin test-ci
 ```
 
-GitHub 上で PR を作成すると、PR 画面の下部に「Test on Node 22.x / 24.x」のチェックが表示されます。
+GitHub 上で PR を作成すると、PR 画面の下部に「Test」のチェックが表示されます。
 
 > **補足:** リポジトリの Settings → Branches でブランチ保護ルールを追加し、`Test` を必須チェックにすると、テストが通らない限りマージできなくなります。
 
