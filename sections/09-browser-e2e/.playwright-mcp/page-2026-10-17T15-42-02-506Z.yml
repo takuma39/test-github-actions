@@ -1,0 +1,22 @@
+- main [ref=e2]:
+  - heading "電卓" [level=1] [ref=e3]
+  - paragraph [ref=e4]:
+    - text: GitHub Actions と Vercel の学習用サンプル。計算ロジックは
+    - code [ref=e5]: src/calculator.ts
+    - text: にあり、同じ関数をテストからも呼んでいます。
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: 左辺
+      - spinbutton "左辺" [ref=e9]: "10"
+    - generic [ref=e10]:
+      - generic [ref=e11]: 演算子
+      - combobox "演算子" [ref=e12]:
+        - option "+" [selected]
+        - option "−"
+        - option "×"
+        - option "÷"
+    - generic [ref=e13]:
+      - generic [ref=e14]: 右辺
+      - spinbutton "右辺" [ref=e15]: "2"
+    - button "計算する" [ref=e16] [cursor=pointer]
+  - status [ref=e17]: ここに結果が表示されます
