@@ -1,12 +1,12 @@
 # Claude Code Skills ハンズオン
 
-手を動かしながら、Claude Code の **Skills・hooks・sub-agent・MCP** を順に確かめる教材です。各セクションが専用の `.claude/` を持つので、ディレクトリに `cd` して `claude` を起動するだけで、そのセクションの Skill だけが見えます。
+Claude Code の **Skills・hooks・sub-agent・MCP** を、手を動かしながら順に確かめる教材です。セクションごとに専用の `.claude/` があり、そのディレクトリで `claude` を起動すると、そのセクション用の Skill が使えます。
 
 ## はじめかた
 
 1. このリポジトリを clone する
-2. リポジトリ直下の [index.html](index.html) をブラウザで開く（ビルド不要の静的 HTML）
-3. 一覧から、進めたいセクションの `cd` をコピーして、ターミナルに貼り付ける
+2. プロジェクトルートの [index.html](index.html) をブラウザで開く（ビルド不要の静的 HTML）
+3. プロジェクトルートでターミナルを開き、進めたいセクションの `cd` をコピーして貼り付ける（例: `cd sections/01-auto-invoke`）
 4. `claude` を起動し、「手順書を開く」の手順を上から順に進める
 
 初めての人は、00 → 01 → 02 → 03 の順がおすすめです。
@@ -15,7 +15,7 @@
 
 - Claude Code が使えること（ログイン済み）
 - Node.js 22 以上、pnpm（09 の画面確認で使う）、Python 3（05・11）
-- 09 だけ、リポジトリ直下で `pnpm install` が必要
+- 09 だけ、プロジェクトルートで `pnpm install` が必要
 
 ## セクション
 
@@ -39,7 +39,7 @@
 ```
 .
 ├── index.html            ハンズオンの目次（各セクションへのリンクと cd パスのコピー）
-├── sections/             教材。セクションごとに手順書と専用の .claude/ を持つ
+├── sections/             教材。セクションごとに手順書と専用の .claude/ がある
 ├── app/                  09・10 で使う電卓アプリ（Vite + Vitest）。詳細は app/README.md
 ├── .claude/skills/       CI 用の pr-review（全セクションに継承される）
 └── .github/workflows/    CI（テスト、Claude によるレビュー）
@@ -47,6 +47,6 @@
 
 ## 注意
 
-- リポジトリ直下の `.claude/skills/pr-review` は CI 用です。親ディレクトリの Skill は子でも読み込まれるため、**全セクションの `/skills` に見えます**。
+- プロジェクトルートの `.claude/skills/pr-review` は CI 用です。親ディレクトリの Skill は子でも読み込まれるため、**全セクションの `/skills` に見えます**。
 - 題材には、レビュー用に**わざと不備を入れて**います（`average([])` が `NaN`、`percentOf(x, 0)` が `Infinity`、`parseNumber("abc")` が `NaN`、テストが正常系だけ）。
 - 結果は LLM の判断で変わります。手順書の「期待する結果」は作成時に確認した例です。違う結果になっても、言い換えて何度か試してください。
