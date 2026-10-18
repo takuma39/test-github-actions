@@ -33,11 +33,15 @@ sample/                      題材（電卓）。わざと不備が入ってい
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>割り算の処理がどこにあるか調査して</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　<code>[investigate 起動]</code> が出て、<code>sample/src/calculator.ts</code> の行番号つきで報告される。<b>ファイルは編集されない</b>。</div>
 </li>
-<li><p class="step-t">対象外の依頼では呼ばれない<label><input type="checkbox" data-step="4"> 済み</label></p>
+<li><p class="step-t">（参考）サンプルに入っている不備<label><input type="checkbox" data-step="4"> 済み</label></p>
+<div class="expect"><b class="k">期待する結果</b>　題材の <code>sample/</code> には、レビューや調査で見つけてもらうために、<b>わざと不備を入れてある</b>（下の一覧）。レビュー結果に出てきたら、狙いどおり。</div>
+<p class="note"><code>average([])</code> は <code>NaN</code> を返す／<code>percentOf(x, 0)</code> は <code>Infinity</code> を返す（<code>divide</code> だけが 0 除算を検査していて一貫しない）／<code>parseNumber("abc")</code> は <code>NaN</code> を返す／テストは <code>add</code> と <code>divide</code> の正常系だけ（<b>テストが少ないのも意図</b>。「テスト不足」を指摘させるため。このサンプルは CI の対象外）。</p>
+</li>
+<li><p class="step-t">対象外の依頼では呼ばれない<label><input type="checkbox" data-step="5"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>こんにちは。今日の調子はどう？</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　どの Skill も起動しない（マーカーが出ない）。</div>
 </li>
-<li><p class="step-t">言い換えても呼ばれるか試す<label><input type="checkbox" data-step="5"> 済み</label></p>
+<li><p class="step-t">言い換えても呼ばれるか試す<label><input type="checkbox" data-step="6"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>calculator.ts のコード、問題ないか見てくれる？</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>average はどこから呼ばれている？</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　1つ目は <code>local-review</code>、2つ目は <code>investigate</code> が選ばれることが多い。</div>

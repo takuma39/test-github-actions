@@ -28,4 +28,5 @@ cd sections/01-auto-invoke && claude
 - リポジトリ直下の `.claude/skills/pr-review` は CI 用。親ディレクトリの Skill は子でも読み込まれるため、**全セクションの `/skills` に見える**。
 - 題材のコピー元は `_sample/`。変更したら `./sync-sample.sh` で各セクションの `sample/` に反映する（演習で書き換えたサンプルを元に戻すときにも使う）。
 - 前提: Claude Code、Node.js 22 以上、pnpm、Python 3。
+- 題材には、レビュー用にわざと不備を入れている（`average([])` が `NaN`、`percentOf(x, 0)` が `Infinity`、`parseNumber("abc")` が `NaN`、テストが正常系だけ）。CI の対象外。
 - 結果は LLM の判断で変わる。手順書の「期待する結果」は作成時に確認した例。

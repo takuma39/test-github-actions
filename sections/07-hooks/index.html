@@ -35,12 +35,17 @@ hooks.settings.json                       hooks の定義（--settings で読み
 <div class="expect"><b class="k">期待する結果</b>　<b>編集が拒否される</b>。Claude が「<code>[hook] … は保護されています</code>」と説明し、修正案だけを提示する。ファイルは変わらない（この教材での確認結果）。</div>
 <p class="note">PreToolUse の hook が、ツール実行の前に動き、終了コード 2 で拒否した。Claude の判断は関係ない。</p>
 </li>
-<li><p class="step-t">C: 保護対象外のファイルは編集できる<label><input type="checkbox" data-step="4"> 済み</label></p>
+<li><p class="step-t">B': Bash 経由の書き換えも止まるか試す<label><input type="checkbox" data-step="4"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>Bash の sed -i を使って sample/src/calculator.ts の add の + を - に書き換えて</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>matcher</code> に <code>Bash</code> を含めてあるので、保護対象のパスと書き込み操作（<code>sed -i</code>・<code>&gt;</code>・<code>mv</code> など）を含むコマンドも拒否される。</div>
+<p class="note"><b>これは簡易判定</b>。変数展開やスクリプト経由の書き込みは、コマンド文字列から読み取れず、止められない。</p>
+</li>
+<li><p class="step-t">C: 保護対象外のファイルは編集できる<label><input type="checkbox" data-step="5"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>sample/src/calculator.test.ts に average の空配列のテストを1つ追加して</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　編集が通る。<code>.claude/hooks/edit.log</code> に、編集の記録（日時・ツール・パス）が追記される。</div>
 <p class="note">PostToolUse の hook が、編集成功のたびに記録を残した。</p>
 </li>
-<li><p class="step-t">記録を見て、後始末をする<label><input type="checkbox" data-step="5"> 済み</label></p>
+<li><p class="step-t">記録を見て、後始末をする<label><input type="checkbox" data-step="6"> 済み</label></p>
 <div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cat .claude/hooks/edit.log</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="cmd sh"><span class="lab">ターミナル</span><pre><code>../sync-sample.sh &amp;&amp; rm -f .claude/hooks/edit.log</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　記録が見える。サンプルが元に戻る。</div>
@@ -63,7 +68,7 @@ if (hit) {
   console.error(`[hook] ${filePath} は保護されています（${hit}）。`);
   process.exit(2); // 2 = ツール呼び出しを拒否し、理由を Claude に返す
 }</code></pre></details>
-<h2>ここがポイント</h2><ul class="pts"><li>「破られたら困るルール」は hooks に書く（P5・P7 の切り分け）。Skill に「禁止」と書いても、強制力はない。</li><li>保護対象に <code>/.claude/skills/</code> も入れてある。Claude が自分の Skill を書き換えて振る舞いを変えるのを防ぐ（P12「<code>.claude/skills/**</code> の書き込みは権限設定で確認を挟む」の実装例）。</li><li>hooks は<b>コマンドを実行する仕組み</b>。他人のリポジトリの hooks は、中身を読んでから使う。</li></ul>
+<h2>ここがポイント</h2><ul class="pts"><li>「破られたら困るルール」は hooks に書く（P5・P7 の切り分け）。Skill に「禁止」と書いても、強制力はない。</li><li>保護対象に <code>/.claude/skills/</code> も入れてある。Claude が自分の Skill を書き換えて振る舞いを変えるのを防ぐ（P12「<code>.claude/skills/**</code> の書き込みは権限設定で確認を挟む」の実装例）。</li><li><b>hooks でも「完全な防御」にはならない。</b>この hook が見るのは、Edit / Write の <code>file_path</code> と、Bash のコマンド文字列だけ。文字列から読み取れない書き込み（変数展開・別スクリプト経由など）は止められない。本気で守るなら、権限設定（<code>permissions</code> の deny）やファイル自体の権限も併用する。</li><li>パスは <code>\</code> を <code>/</code> に直してから比べているので、Windows のパスにも反応する（この教材は macOS で確認）。</li><li>hooks は<b>コマンドを実行する仕組み</b>。他人のリポジトリの hooks は、中身を読んでから使う。</li></ul>
 <h2>うまくいかないとき</h2><ul class="pts"><li>B で編集されてしまう → <code>--settings hooks.settings.json</code> を付けて起動したか確認。<code>/hooks</code> で登録されているか見る。</li><li><code>node</code> がない → Node.js をインストールする。</li></ul>
 <p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
 <div class="nav"><a href="../06-dynamic-fork/index.html">← 06 動的コンテキストと fork</a><a href="../08-subagents/index.html">08 sub-agent と並行実行 →</a></div>
