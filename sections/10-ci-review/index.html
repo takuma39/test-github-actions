@@ -32,7 +32,8 @@
 <div class="expect"><b class="k">期待する結果</b>　手順（差分の取得 → 必要なら周辺を読む → <b>PR に投稿</b>）、レビュー観点、<b>やらないこと</b>が書かれている。</div>
 </li>
 <li><p class="step-t">PR を作って、結果を見る（Test と Claude Review の両方）<label><input type="checkbox" data-step="4"> 済み</label></p>
-<div class="expect"><b class="k">期待する結果</b>　GitHub 上で、<code>test/error</code>（または自分の作業ブランチ）から <code>main</code> 宛ての PR を作る（<code>gh</code> コマンドがあれば <code>gh pr create</code> でもよい）。PR 画面の下部に「Test」のチェックが表示され、Actions の Claude Review が走って、PR に日本語のレビューコメントが付く。</div>
+<p class="do">GitHub 上で、<code>test/error</code>（または自分の作業ブランチ）から <code>main</code> 宛ての PR を作る。<code>gh</code> コマンドがあれば、<code>gh pr create --base main --head test/error</code> でもよい。</p>
+<div class="expect"><b class="k">期待する結果</b>　PR 画面の下部に「Test」のチェックが表示され、Actions の Claude Review が走って、PR に日本語のレビューコメントが付く。</div>
 </li>
 </ol>
 <h2>整理</h2><table><thead><tr><th>順</th><th>Test の実行内容</th><th>目的</th></tr></thead><tbody><tr><td>1</td><td><code>pnpm install --frozen-lockfile</code></td><td><code>pnpm-lock.yaml</code> どおりに依存をインストールする</td></tr><tr><td>2</td><td><code>pnpm run typecheck</code></td><td>型エラーがないか確認する</td></tr><tr><td>3</td><td><code>pnpm test</code></td><td>Vitest でテストを実行する</td></tr><tr><td>4</td><td><code>pnpm run build</code></td><td>本番ビルドが通るか確認する</td></tr></tbody></table>

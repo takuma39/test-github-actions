@@ -27,6 +27,7 @@ ol.steps>li::before{content:counter(s);position:absolute;left:14px;top:14px;widt
 .step-t{font-weight:700;margin:0 0 4px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .step-t label{font-weight:400;font-size:13px;color:var(--muted);cursor:pointer}
 .expect{background:var(--ok-bg);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;margin:8px 0;font-size:15px}
+.do{margin:6px 0}
 .expect b.k{color:var(--ok)}
 .note{font-size:14px;color:var(--muted);margin:6px 0 0}
 table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0;display:block;overflow-x:auto}
