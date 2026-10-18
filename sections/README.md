@@ -1,6 +1,6 @@
 # sections/ — Skills ハンズオン
 
-手を動かして Claude Code の Skills・hooks・sub-agent・MCP を学ぶ教材。**`index.html` をブラウザで開く**と手順書が見られる（ビルド不要の静的 HTML）。
+手を動かして Claude Code の Skills・hooks・sub-agent・MCP を学ぶ教材。**リポジトリ直下の `index.html` をブラウザで開く**と、目次と各セクションの手順書（ビルド不要の静的 HTML）が見られる。全体の説明は、リポジトリ直下の `README.md` を参照。
 
 各セクションは自分専用の `.claude/` を持つ。使うときは、そのディレクトリで `claude` を起動する。
 

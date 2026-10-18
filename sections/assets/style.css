@@ -43,4 +43,12 @@ summary{cursor:pointer;color:var(--muted)}
 .card:hover{border-color:var(--accent)}
 .card .n{color:var(--accent);font-weight:700;font-size:13px}
 .card .t{font-weight:700;margin:2px 0}
+.rows{display:grid;gap:10px;margin-top:12px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.row .head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.row .n{color:var(--accent);font-weight:700}
+.row .t{font-weight:700}
+.row .g{font-size:13.5px;color:var(--muted);margin:2px 0 0}
+.row .open{margin-left:auto;font-size:14px}
+.row .cmd{margin:8px 0 0}
 .card .g{font-size:13.5px;color:var(--muted);line-height:1.55}
