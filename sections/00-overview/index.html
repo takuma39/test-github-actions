@@ -9,23 +9,23 @@
 <body><div class="wrap">
 <div class="crumb"><a href="../../index.html">Skills ハンズオン</a> / セクション 00</div>
 <h1>00　全体像と進め方</h1>
-<div class="meta"><span class="tag">所要 10分</span><span class="tag">資料 P1〜P5</span></div>
+<div class="meta"><span class="tag">資料 P1〜P5</span></div>
 <div class="goal"><b>このセクションのゴール</b><br>Skills が何で、どこに置かれ、どう読み込まれるかを、実際の画面で確かめる。以降のセクションの前提をそろえる。</div>
 
 <h2>準備</h2>
-<p>リポジトリ直下から、次のコマンドでこのセクション専用の環境を起動する。</p>
+<p>プロジェクトルートから、次のコマンドでこのセクション専用の環境を起動する。</p>
 <div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/00-overview &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
 <details open><summary>このセクションの中身</summary><pre><code>sections/
 ├── 00-overview/         ← いまここ（.claude/ なし）
-├── 01-auto-invoke/      各セクションが自分専用の .claude/ を持つ
+├── 01-auto-invoke/      各セクションが専用の .claude/ を持つ
 │   ├── .claude/skills/
 │   └── sample/          題材（電卓）のコピー
 └── ...
-.claude/skills/pr-review/   ← リポジトリ直下。CI 用。全セクションに継承される</code></pre></details>
+.claude/skills/pr-review/   ← プロジェクトルート。CI 用。全セクションに継承される</code></pre></details>
 <h2>やってみる</h2><ol class="steps">
 <li><p class="step-t">見えている Skill を一覧する<label><input type="checkbox" data-step="1"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/skills</code></pre><button class="copy" type="button">コピー</button></div>
-<div class="expect"><b class="k">期待する結果</b>　リポジトリ直下の <code>pr-review</code>（Project）が見える。あなたの個人設定やプラグインの Skill も混ざって見えることがある。</div>
+<div class="expect"><b class="k">期待する結果</b>　プロジェクトルートの <code>pr-review</code>（Project）が見える。あなたの個人設定やプラグインの Skill も混ざって見えることがある。</div>
 <p class="note">セクション 01 以降では、そのセクションの Skill が増える。<b>どの Skill が見えているか</b>は、いつでも <code>/skills</code> で確認できる。</p>
 </li>
 <li><p class="step-t">常時読み込まれているものを見る<label><input type="checkbox" data-step="2"> 済み</label></p>
