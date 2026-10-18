@@ -11,8 +11,8 @@ import { readFileSync } from "node:fs";
 
 // 相対パスで書かれた Bash コマンドにも一致するよう、先頭の / は付けない
 const PROTECTED = ["sample/src/calculator.ts", ".claude/skills/"];
-// sed -i / perl -i / tee / mv / cp / rm / リダイレクト（2>&1 などは除く）
-const WRITE_LIKE = /\b(sed|perl)\s+-[a-zA-Z]*i|\b(tee|mv|cp|rm)\b|(?<![0-9&])>/;
+// sed / perl の -i（-E -i や --in-place のように、オプションの位置が違っても拾う）/ tee / mv / cp / rm / リダイレクト（2>&1 などは除く）
+const WRITE_LIKE = /\b(sed|perl)\b[^|;&]*\s(-[a-zA-Z]*i|--in-place)|\b(tee|mv|cp|rm)\b|(?<![0-9&])>/;
 
 const input = JSON.parse(readFileSync(0, "utf8"));
 // Windows のパス区切りも同じ形で比較する

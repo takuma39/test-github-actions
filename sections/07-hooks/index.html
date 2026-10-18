@@ -85,8 +85,8 @@ import { readFileSync } from &quot;node:fs&quot;;
 
 // 相対パスで書かれた Bash コマンドにも一致するよう、先頭の / は付けない
 const PROTECTED = [&quot;sample/src/calculator.ts&quot;, &quot;.claude/skills/&quot;];
-// sed -i / perl -i / tee / mv / cp / rm / リダイレクト（2&gt;&amp;1 などは除く）
-const WRITE_LIKE = /\b(sed|perl)\s+-[a-zA-Z]*i|\b(tee|mv|cp|rm)\b|(?&lt;![0-9&amp;])&gt;/;
+// sed / perl の -i（-E -i や --in-place のように、オプションの位置が違っても拾う）/ tee / mv / cp / rm / リダイレクト（2&gt;&amp;1 などは除く）
+const WRITE_LIKE = /\b(sed|perl)\b[^|;&amp;]*\s(-[a-zA-Z]*i|--in-place)|\b(tee|mv|cp|rm)\b|(?&lt;![0-9&amp;])&gt;/;
 
 const input = JSON.parse(readFileSync(0, &quot;utf8&quot;));
 // Windows のパス区切りも同じ形で比較する
@@ -105,7 +105,7 @@ if (hit) {
   console.error(`[hook] 保護されています（${hit}）。編集せず、修正案を提示してください。`);
   process.exit(2);
 }</code></pre></details>
-<h2>ここがポイント</h2><ul class="pts"><li>「破られたら困るルール」は hooks に書く（P5・P7 の切り分け）。Skill に「禁止」と書いても、強制力はない。</li><li>保護対象に <code>/.claude/skills/</code> も入れてある。Claude が自分の Skill を書き換えて振る舞いを変えるのを防ぐ（P12「<code>.claude/skills/**</code> の書き込みは権限設定で確認を挟む」の実装例）。</li><li><b>hooks でも「完全な防御」にはならない。</b>この hook が見るのは、Edit / Write の <code>file_path</code> と、Bash のコマンド文字列だけ。文字列から読み取れない書き込み（変数展開・別スクリプト経由など）は止められない。本気で守るなら、権限設定（<code>permissions</code> の deny）やファイル自体の権限も併用する。</li><li>パスは <code>\</code> を <code>/</code> に直してから比べているので、Windows のパスにも反応する（この教材は macOS で確認）。</li><li>hooks は<b>コマンドを実行する仕組み</b>。他人のリポジトリの hooks は、中身を読んでから使う。</li></ul>
+<h2>ここがポイント</h2><ul class="pts"><li>「破られたら困るルール」は hooks に書く（P5・P7 の切り分け）。Skill に「禁止」と書いても、強制力はない。</li><li>保護対象に <code>/.claude/skills/</code> も入れてある。Claude が自分の Skill を書き換えて振る舞いを変えるのを防ぐ（P12「<code>.claude/skills/**</code> の書き込みは権限設定で確認を挟む」の実装例）。</li><li><b>hooks でも「完全な防御」にはならない。</b>この hook が見るのは、Edit / Write の <code>file_path</code> と、Bash のコマンド文字列だけ。文字列から読み取れない書き込み（変数展開・別スクリプト経由など）や、パターンに入っていない書き方（<code>python -c</code>、<code>awk -i inplace</code> など）は止められない。本気で守るなら、権限設定（<code>permissions</code> の deny）やファイル自体の権限も併用する。</li><li>パスは <code>\</code> を <code>/</code> に直してから比べているので、Windows のパスにも反応する（この教材は macOS で確認）。</li><li>hooks は<b>コマンドを実行する仕組み</b>。他人のリポジトリの hooks は、中身を読んでから使う。</li></ul>
 <h2>うまくいかないとき</h2><ul class="pts"><li>B で編集されてしまう → <code>--settings hooks.settings.json</code> を付けて起動したか確認。<code>/hooks</code> で登録されているか見る。</li><li><code>node</code> がない → Node.js をインストールする。</li></ul>
 <p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
 <div class="nav"><a href="../06-dynamic-fork/index.html">← 06 動的コンテキストと fork</a><a href="../08-subagents/index.html">08 sub-agent と並行実行 →</a></div>
