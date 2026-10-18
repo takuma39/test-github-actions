@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills ハンズオン</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body><div class="wrap">
+<h1>Claude Code Skills ハンズオン</h1>
+<p>手を動かしながら、Skills・hooks・sub-agent・MCP を順に確かめる教材。各セクションが<b>自分専用の <code>.claude/</code></b> を持つので、<code>cd</code> して <code>claude</code> を起動するだけで、そのセクションの Skill だけが見える。</p>
+<div class="goal"><b>進め方</b><br>1. このリポジトリを clone し、リポジトリ直下で <code>pnpm install</code>（09 で使用）<br>2. セクションのページを開き、「準備」のコマンドでそのディレクトリに入って <code>claude</code> を起動<br>3. 「やってみる」の順に、入力欄のコマンドをコピーして実行し、「期待する結果」と見比べる</div>
+<h2>前提</h2>
+<ul class="pts">
+<li>Claude Code が使えること（ログイン済み）</li>
+<li>Node.js 22 以上、pnpm（09 の画面確認で使う）、Python 3（05・11）、Node.js（07 の hook）</li>
+<li>リポジトリ直下の <code>.claude/skills/pr-review</code> は CI 用。<b>全セクションに継承される</b>ので、<code>/skills</code> に常に見える</li>
+<li>題材は電卓（<code>sections/_sample/</code>）。学習用に、わざと不備を入れている。変更した後は <code>sections/sync-sample.sh</code> で元に戻せる</li>
+</ul>
+<h2>セクション一覧</h2>
+<div class="grid"><a class="card" href="00-overview/index.html"><div class="n">00　・　10分</div><div class="t">全体像と進め方</div><div class="g">Skills が何で、どこに置かれ、どう読み込まれるかを、実際の画面で確かめる。</div></a><a class="card" href="01-auto-invoke/index.html"><div class="n">01　・　10分</div><div class="t">自動で呼ばれる（/ なし）</div><div class="g">Skill の名前を言わずに「レビューして」「調査して」と頼むだけで、Claude が適切な Skill を選んで使うことを確かめる。</div></a><a class="card" href="02-slash-invoke/index.html"><div class="n">02　・　8分</div><div class="t">/ で呼ぶ（手動）</div><div class="g">同じ Skill を、<code>/名前</code> で明示的に呼ぶ。</div></a><a class="card" href="03-description/index.html"><div class="n">03　・　15分</div><div class="t">description で決まる</div><div class="g">description の書き方で、Skill が呼ばれるかどうかが変わることを体験する。</div></a><a class="card" href="04-invocation-control/index.html"><div class="n">04　・　15分</div><div class="t">呼び出しの制御</div><div class="g">Skill を「誰が呼べるか」で使い分ける。</div></a><a class="card" href="05-scripts/index.html"><div class="n">05　・　15分</div><div class="t">scripts で検査を自動化</div><div class="g">「文章で守れ」と書いても守られないルールを、スクリプトで機械的に判定させる。</div></a><a class="card" href="06-dynamic-fork/index.html"><div class="n">06　・　12分</div><div class="t">動的コンテキストと fork</div><div class="g">Skill の中でコマンドを実行して結果を埋め込む <code>!`cmd`</code> と、別コンテキストで動かす <code>context: fork</code> を確かめる。</div></a><a class="card" href="07-hooks/index.html"><div class="n">07　・　15分</div><div class="t">hooks で強制する</div><div class="g">Skill は「お願い」で、hooks は「強制」。</div></a><a class="card" href="08-subagents/index.html"><div class="n">08　・　15分</div><div class="t">sub-agent と並行実行</div><div class="g">Skill から sub-agent を呼び、<b>レビューと調査を並行</b>で走らせる。</div></a><a class="card" href="09-browser-e2e/index.html"><div class="n">09　・　20分</div><div class="t">ブラウザ打鍵（MCP）</div><div class="g">Playwright MCP で、Claude に実際のブラウザを操作させ、電卓アプリを打鍵させる。</div></a><a class="card" href="10-ci-review/index.html"><div class="n">10　・　15分</div><div class="t">CI から Skill を呼ぶ</div><div class="g">PR を作ると GitHub Actions が Claude を起動し、<code>/pr-review</code> の Skill でレビューコメントを投稿する流れを理解する。</div></a><a class="card" href="11-safety/index.html"><div class="n">11　・　15分</div><div class="t">Skill を守る（監査）</div><div class="g">他人の Skill を取り込む前の監査を体験する。</div></a></div>
+<h2>おすすめの順番</h2>
+<p>最初に 00 → 01 → 02 → 03 で基本（自動と手動、description）をつかむ。そのあとは興味のあるものから。<b>07（hooks）と 08（sub-agent）、09（ブラウザ打鍵）</b>は、01〜03 を終えてからが分かりやすい。</p>
+<p class="note">資料: 「Skills 入門」（社内共有用 PDF）。各ページの「資料 P○」は、その PDF のページ番号。</p>
+</div></body></html>

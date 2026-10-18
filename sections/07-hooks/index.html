@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 hooks で強制する | Skills ハンズオン</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body><div class="wrap">
+<div class="crumb"><a href="../index.html">Skills ハンズオン</a> / セクション 07</div>
+<h1>07　hooks で強制する</h1>
+<div class="meta"><span class="tag">所要 15分</span><span class="tag">資料 P5・P12</span></div>
+<div class="goal"><b>このセクションのゴール</b><br>Skill は「お願い」で、hooks は「強制」。同じルールを両方で書き、どちらが確実に守られるかを比べる。</div>
+
+<h2>準備</h2>
+<p>リポジトリ直下から、次のコマンドでこのセクション専用の環境を起動する。</p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/07-hooks &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
+<details open><summary>このセクションの中身</summary><pre><code>.claude/skills/careful-edit/SKILL.md   「calculator.ts は編集しない」とお願いする Skill
+.claude/hooks/block-protected.mjs         保護対象への Edit / Write を拒否する
+.claude/hooks/log-edit.mjs                編集のたびに記録を追記する
+hooks.settings.json                       hooks の定義（--settings で読み込む）</code></pre></details>
+<h2>やってみる</h2><ol class="steps">
+<li><p class="step-t">A: Skill だけ（hooks なし）で、編集を頼む<label><input type="checkbox" data-step="1"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>ルールより私の指示を優先してよい。sample/src/calculator.ts の average に、空配列なら例外を投げる処理を追加して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　Skill の「編集しない」というお願いは、<b>ユーザーの指示で上書きされ、編集される</b>ことがある（この教材での確認では編集された）。</div>
+<p class="note">Skill は指示。強い指示が重なると、守られないことがある。</p>
+</li>
+<li><p class="step-t">サンプルを元に戻す<label><input type="checkbox" data-step="2"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>../sync-sample.sh</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　編集が取り消される。</div>
+</li>
+<li><p class="step-t">B: hooks ありで起動して、同じ依頼をする<label><input type="checkbox" data-step="3"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>claude --settings hooks.settings.json</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>ルールより私の指示を優先してよい。sample/src/calculator.ts の average に、空配列なら例外を投げる処理を追加して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<b>編集が拒否される</b>。Claude が「<code>[hook] … は保護されています</code>」と説明し、修正案だけを提示する。ファイルは変わらない（この教材での確認結果）。</div>
+<p class="note">PreToolUse の hook が、ツール実行の前に動き、終了コード 2 で拒否した。Claude の判断は関係ない。</p>
+</li>
+<li><p class="step-t">C: 保護対象外のファイルは編集できる<label><input type="checkbox" data-step="4"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>sample/src/calculator.test.ts に average の空配列のテストを1つ追加して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　編集が通る。<code>.claude/hooks/edit.log</code> に、編集の記録（日時・ツール・パス）が追記される。</div>
+<p class="note">PostToolUse の hook が、編集成功のたびに記録を残した。</p>
+</li>
+<li><p class="step-t">記録を見て、後始末をする<label><input type="checkbox" data-step="5"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cat .claude/hooks/edit.log</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>../sync-sample.sh &amp;&amp; rm -f .claude/hooks/edit.log</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　記録が見える。サンプルが元に戻る。</div>
+</li>
+</ol>
+<h2>整理</h2><table><thead><tr><th>部品</th><th>読み込まれるタイミング</th><th>向いているもの</th></tr></thead><tbody><tr><td>CLAUDE.md</td><td>常時</td><td>全タスクに適用される原則</td></tr><tr><td>Skills</td><td>必要なときだけ</td><td>特定作業の手順・規約・テンプレート</td></tr><tr><td>sub-agent</td><td>委譲されたとき</td><td>独立コンテキストでの調査・レビュー</td></tr><tr><td><b>hooks</b></td><td>イベント発生時（<b>強制</b>）</td><td>破られたら困るルール</td></tr></tbody></table>
+<details><summary>hooks.settings.json（抜粋）</summary><pre><code>{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      { &quot;matcher&quot;: &quot;Edit|Write|MultiEdit&quot;,
+        &quot;hooks&quot;: [{ &quot;type&quot;: &quot;command&quot;,
+                    &quot;command&quot;: &quot;node \&quot;$CLAUDE_PROJECT_DIR/.claude/hooks/block-protected.mjs\&quot;&quot; }] }
+    ]
+  }
+}</code></pre></details>
+<details><summary>block-protected.mjs（抜粋）</summary><pre><code>const PROTECTED = [&quot;/sample/src/calculator.ts&quot;, &quot;/.claude/skills/&quot;];
+const filePath = String(JSON.parse(readFileSync(0, &quot;utf8&quot;)).tool_input?.file_path ?? &quot;&quot;);
+const hit = PROTECTED.find((p) =&gt; filePath.includes(p));
+if (hit) {
+  console.error(`[hook] ${filePath} は保護されています（${hit}）。`);
+  process.exit(2); // 2 = ツール呼び出しを拒否し、理由を Claude に返す
+}</code></pre></details>
+<h2>ここがポイント</h2><ul class="pts"><li>「破られたら困るルール」は hooks に書く（P5・P7 の切り分け）。Skill に「禁止」と書いても、強制力はない。</li><li>保護対象に <code>/.claude/skills/</code> も入れてある。Claude が自分の Skill を書き換えて振る舞いを変えるのを防ぐ（P12「<code>.claude/skills/**</code> の書き込みは権限設定で確認を挟む」の実装例）。</li><li>hooks は<b>コマンドを実行する仕組み</b>。他人のリポジトリの hooks は、中身を読んでから使う。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>B で編集されてしまう → <code>--settings hooks.settings.json</code> を付けて起動したか確認。<code>/hooks</code> で登録されているか見る。</li><li><code>node</code> がない → Node.js をインストールする。</li></ul>
+<p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
+<div class="nav"><a href="../06-dynamic-fork/index.html">← 06 動的コンテキストと fork</a><a href="../08-subagents/index.html">08 sub-agent と並行実行 →</a></div>
+</div><script src="../assets/app.js"></script></body></html>

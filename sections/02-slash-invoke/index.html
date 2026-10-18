@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 / で呼ぶ（手動） | Skills ハンズオン</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body><div class="wrap">
+<div class="crumb"><a href="../index.html">Skills ハンズオン</a> / セクション 02</div>
+<h1>02　/ で呼ぶ（手動）</h1>
+<div class="meta"><span class="tag">所要 8分</span><span class="tag">資料 P4・P10</span></div>
+<div class="goal"><b>このセクションのゴール</b><br>同じ Skill を、<code>/名前</code> で明示的に呼ぶ。自動起動との違い（確実に起動する・引数を渡せる）を確かめる。</div>
+
+<h2>準備</h2>
+<p>リポジトリ直下から、次のコマンドでこのセクション専用の環境を起動する。</p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/02-slash-invoke &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
+<details open><summary>このセクションの中身</summary><pre><code>.claude/skills/
+├── local-review/SKILL.md   01 と同じ Skill
+└── investigate/SKILL.md    01 と同じ Skill</code></pre></details>
+<h2>やってみる</h2><ol class="steps">
+<li><p class="step-t">候補を見る<label><input type="checkbox" data-step="1"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>/</code> だけ打つと、呼び出せる Skill の候補が出る。<code>local-review</code> には引数のヒント <code>[ファイルパス]</code> が表示される（<code>argument-hint</code>）。</div>
+</li>
+<li><p class="step-t">引数つきでレビューを呼ぶ<label><input type="checkbox" data-step="2"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/local-review sample/src/calculator.ts</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　必ず <code>[local-review 起動]</code> が出る。引数のファイルが対象になる。</div>
+</li>
+<li><p class="step-t">引数つきで調査を呼ぶ<label><input type="checkbox" data-step="3"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/investigate average が空配列のときの扱い</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>[investigate 起動]</code> が出て、<code>average</code> の挙動が根拠つきで報告される。</div>
+</li>
+<li><p class="step-t">01 との違いを比べる<label><input type="checkbox" data-step="4"> 済み</label></p>
+<div class="expect"><b class="k">期待する結果</b>　下の表のとおり。自動は便利だが「選ばれるか」は確実でない。手動は確実だが、人が覚えて打つ必要がある。</div>
+</li>
+</ol>
+<h2>整理</h2><table><thead><tr><th></th><th>自動（01）</th><th>手動（02）</th></tr></thead><tbody><tr><td>起動のきっかけ</td><td>依頼の内容と description の一致</td><td><code>/名前</code> を打つ</td></tr><tr><td>確実さ</td><td>外れることがある</td><td>必ず起動する</td></tr><tr><td>引数</td><td>文章から Claude が読み取る</td><td><code>$ARGUMENTS</code> に入る</td></tr><tr><td>向いている作業</td><td>規約・レビュー手順など</td><td>デプロイ・コミットなど副作用のある操作（04）</td></tr></tbody></table>
+<h2>ここがポイント</h2><ul class="pts"><li>Skill は「Claude が自動で使う知識」でもあり、「人が <code>/名前</code> で呼ぶコマンド」でもある。旧 <code>commands/</code> は Skill に統合済み（P10）。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>候補に出ない → <code>/skills</code> で確認。起動したディレクトリが違う可能性がある。</li></ul>
+<p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
+<div class="nav"><a href="../01-auto-invoke/index.html">← 01 自動で呼ばれる（/ なし）</a><a href="../03-description/index.html">03 description で決まる →</a></div>
+</div><script src="../assets/app.js"></script></body></html>

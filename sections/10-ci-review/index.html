@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 CI から Skill を呼ぶ | Skills ハンズオン</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body><div class="wrap">
+<div class="crumb"><a href="../index.html">Skills ハンズオン</a> / セクション 10</div>
+<h1>10　CI から Skill を呼ぶ</h1>
+<div class="meta"><span class="tag">所要 15分</span><span class="tag">資料 P1（ワークフロー）・P12</span></div>
+<div class="goal"><b>このセクションのゴール</b><br>PR を作ると GitHub Actions が Claude を起動し、<code>/pr-review</code> の Skill でレビューコメントを投稿する流れを理解する。</div>
+
+<h2>準備</h2>
+<p>このセクションはローカルでは動かさず、GitHub 上で確かめる。</p>
+<details open><summary>このセクションの中身</summary><pre><code>.github/workflows/claude-review.yml     PR の作成・更新で Claude を起動
+.claude/skills/pr-review/SKILL.md         レビューの手順・観点・やらないこと</code></pre></details>
+<h2>やってみる</h2><ol class="steps">
+<li><p class="step-t">ワークフローを読む<label><input type="checkbox" data-step="1"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cat .github/workflows/claude-review.yml</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　トリガーは PR の <code>opened</code> / <code>synchronize</code>。<code>prompt</code> に <code>/pr-review &lt;リポジトリ&gt;/pull/&lt;番号&gt;</code> を渡して Skill を呼んでいる。</div>
+</li>
+<li><p class="step-t">Skill の中身を読む<label><input type="checkbox" data-step="2"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cat .claude/skills/pr-review/SKILL.md</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　手順（差分の取得 → 必要なら周辺を読む → <b>PR に投稿</b>）、レビュー観点、<b>やらないこと</b>が書かれている。</div>
+</li>
+<li><p class="step-t">PR を作って、結果を見る<label><input type="checkbox" data-step="3"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>gh pr create --base main --head test/error --title &quot;CI 確認&quot; --body &quot;レビュー動作確認&quot;</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　Actions の Claude Review が走り、PR に日本語のレビューコメントが付く。テストが意図的に失敗するブランチなので、指摘が出る。</div>
+</li>
+</ol>
+<h2>ここがポイント</h2><ul class="pts"><li><b>Skill は CI でも使える</b>。ただし <code>.claude/skills/</code> を読ませるため、<code>actions/checkout</code> が必要。差分を取るので <code>fetch-depth: 0</code> も要る。</li><li><code>--allowedTools</code> を渡さないと、Claude はコメントを投稿できず、レビュー結果を出力しただけで正常終了する（ワークフローのコメントにも書いてある）。<b>権限は必要最小限</b>（<code>gh pr comment</code>、<code>git diff</code> など）。</li><li><code>--max-turns</code> が小さいと、レビューが途中で打ち切られる。SKILL.md に「往復回数には上限がある。無駄な確認を挟まない」と書いて、手順を絞っている。</li><li>このリポジトリ直下の <code>.claude/skills/pr-review</code> は、全セクションに継承される。CI のために残してある。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>コメントが付かない → Actions のログと、トークン・権限（<code>pull-requests: write</code>）を確認する。</li><li>Draft PR は対象外（ワークフローの <code>if</code> 条件）。</li></ul>
+<p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
+<div class="nav"><a href="../09-browser-e2e/index.html">← 09 ブラウザ打鍵（MCP）</a><a href="../11-safety/index.html">11 Skill を守る（監査） →</a></div>
+</div><script src="../assets/app.js"></script></body></html>
