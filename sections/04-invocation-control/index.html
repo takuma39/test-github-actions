@@ -35,10 +35,11 @@ sample/issues/3.md           修正対象の Issue</code></pre></details>
 <div class="expect"><b class="k">期待する結果</b>　<code>[calc-spec 参照]</code> が出て、「空配列は例外を投げる」という仕様に沿った方針になる。</div>
 <p class="note"><code>calc-spec</code> は <code>/</code> の候補には出ないはず。Claude が背景知識として自動で読む Skill。</p>
 </li>
-<li><p class="step-t">（発展）paths で対象を絞る<label><input type="checkbox" data-step="4"> 済み</label></p>
+<li><p class="step-t">（発展・実験）paths で対象を絞る<label><input type="checkbox" data-step="4"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>sample/src/calculator.ts を読んで、各関数の戻り値の型が適切か確認して。修正はしないで</code></pre><button class="copy" type="button">コピー</button></div>
-<div class="expect"><b class="k">期待する結果</b>　<code>ts-conventions</code> は <code>paths: **/*.ts</code> の Skill。<b>この教材での確認では起動しなかった</b>。起動する・しないは版や状況で変わるので、起動しなくても失敗ではない。</div>
-<p class="note"><code>paths</code> は、該当ファイルを扱うときだけ Skill を有効にする設定。言語・ディレクトリ固有の規約向け。</p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>TypeScript の関数を書くときの規約を教えて</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>ts-conventions</code> は <code>paths: **/*.ts</code> の Skill。公式ドキュメントには「一致するファイルを扱うときだけ自動で読み込む」とある。起動したかは、出力の先頭に <code>[ts-conventions 参照]</code> が出るかで判定する。<b>この教材での確認（各数回）では、<code>.ts</code> を読む1つ目は一度も出ず、ファイルに触れない2つ目は半分ほどの回数で出た</b>。2つ目は、ファイルを扱っていないのに起動することがあり、公式の説明どおりではない。結果は揺れるので、数回繰り返して比べる。どちらもファイルは変更しない。</div>
+<p class="note"><code>paths</code> と description による自動起動の関係は、公式ドキュメントにも書かれていない。<b>「paths で確実に絞れる」と期待しない</b>。確実に抑えたいなら、手動専用（<code>disable-model-invocation: true</code>）にするか、description に「使わない場面」を書く。結果は版によって変わりうるので、自分の環境で試して確かめる。</p>
 </li>
 <li><p class="step-t">（確認）背景知識は意図しない依頼にも反応しうる<label><input type="checkbox" data-step="5"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>こんにちは</code></pre><button class="copy" type="button">コピー</button></div>
