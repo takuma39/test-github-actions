@@ -3,12 +3,6 @@
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  build: {
-    // app/ をルートにしても、成果物は従来どおりリポジトリ直下の dist/ に出す。
-    // Vercel の Output Directory（dist）を変えずに済む。
-    outDir: "../dist",
-    emptyOutDir: true,
-  },
   test: {
     include: ["src/**/*.test.ts"],
     reporters: process.env.GITHUB_ACTIONS ? ["default", "github-actions"] : ["default"],

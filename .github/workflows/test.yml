@@ -46,6 +46,6 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      # 本番ビルドが壊れていないか確認する（Vercel でのデプロイと同じ工程）
+      # 本番ビルドが壊れていないか確認する
       - name: Build
         run: pnpm run build
