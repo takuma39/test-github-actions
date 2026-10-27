@@ -1,3 +1,4 @@
+<!-- このファイルは tools/handson-docs/generate.py で生成している。直接編集せず、content.py を直して再生成する -->
 <!doctype html>
 <html lang="ja">
 <head>
@@ -9,33 +10,34 @@
 <body><div class="wrap">
 <div class="crumb"><a href="../../index.html">Skills ハンズオン</a> / セクション 00</div>
 <h1>00　全体像と進め方</h1>
-<div class="meta"><span class="tag">所要 10分</span><span class="tag">資料 P1〜P5</span></div>
+<div class="meta"><span class="tag">資料 P1〜P5</span></div>
 <div class="goal"><b>このセクションのゴール</b><br>Skills が何で、どこに置かれ、どう読み込まれるかを、実際の画面で確かめる。以降のセクションの前提をそろえる。</div>
-
 <h2>準備</h2>
-<p>リポジトリ直下から、次のコマンドでこのセクション専用の環境を起動する。</p>
-<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/00-overview &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
-<details open><summary>このセクションの中身</summary><pre><code>sections/
-├── 00-overview/         ← いまここ（.claude/ なし）
-├── 01-auto-invoke/      各セクションが自分専用の .claude/ を持つ
-│   ├── .claude/skills/
-│   └── sample/          題材（電卓）のコピー
-└── ...
-.claude/skills/pr-review/   ← リポジトリ直下。CI 用。全セクションに継承される</code></pre></details>
+<p>このセクションは <code>main</code> ブランチで進める。</p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>git switch main</code></pre><button class="copy" type="button">コピー</button></div>
+<p class="note">前のセクションで書き換えたファイルがあると、切り替えに失敗したり、変更が持ち越されたりする。<code>git restore .</code> で元に戻してから切り替える。切り替えたあとは、<b>新しい会話（新しいセッション）</b>で Claude Code を開く。</p>
+<details open><summary>このセクションの中身（<code>.claude/</code> など）</summary><pre><code>.claude/skills/pr-review/SKILL.md   main にだけある、CI 用の Skill
+sections/                                各セクションの手順書と、.claude/ の元データ
+sample/                                  全セクション共通の題材（電卓）</code></pre></details>
 <h2>やってみる</h2><ol class="steps">
-<li><p class="step-t">見えている Skill を一覧する<label><input type="checkbox" data-step="1"> 済み</label></p>
-<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/skills</code></pre><button class="copy" type="button">コピー</button></div>
-<div class="expect"><b class="k">期待する結果</b>　リポジトリ直下の <code>pr-review</code>（Project）が見える。あなたの個人設定やプラグインの Skill も混ざって見えることがある。</div>
-<p class="note">セクション 01 以降では、そのセクションの Skill が増える。<b>どの Skill が見えているか</b>は、いつでも <code>/skills</code> で確認できる。</p>
+<li><p class="step-t">ブランチの一覧を見る<label><input type="checkbox" data-step="1"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>git branch -a</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>main</code> と、<code>section-01-auto-invoke</code> のような <code>section-…</code> のブランチが並ぶ。</div>
+<p class="note"><b>どのブランチも、<code>.claude/</code> 以外は同じ内容</b>。ブランチを切り替えると、<code>.claude/</code>（Skill・hooks・設定）だけが入れ替わる。</p>
 </li>
-<li><p class="step-t">常時読み込まれているものを見る<label><input type="checkbox" data-step="2"> 済み</label></p>
+<li><p class="step-t">見えている Skill を一覧する<label><input type="checkbox" data-step="2"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/skills</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>pr-review</code>（Project）だけが見える。<code>main</code> の <code>.claude/</code> には、CI 用の <code>pr-review</code> しか置いていない。個人設定やプラグインの Skill が混ざって見えることもある。</div>
+<p class="note">セクションのブランチに切り替えると、<code>/skills</code> に、そのセクションの Skill が出る。<b>いま何が見えているか</b>は、いつでも <code>/skills</code> で確認できる。</p>
+</li>
+<li><p class="step-t">常時読み込まれているものを見る<label><input type="checkbox" data-step="3"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/context</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　Skills の欄に、<b>name と description だけ</b>が載っている（本文は載っていない）。</div>
 <p class="note">これが「3層ロード」の Level 1。Skill を増やしても、常時読み込まれる量はわずか。本文は Claude が必要と判断したときに初めて読まれる（Level 2）。</p>
 </li>
 </ol>
-<h2>ここがポイント</h2><ul class="pts"><li>Skill は <code>&lt;名前&gt;/SKILL.md</code> を含むフォルダ。<code>.claude/skills/</code> に置けば、そのプロジェクトの全員が使える（Git で共有）。</li><li><b>親ディレクトリの <code>.claude/skills/</code> は、子ディレクトリで起動しても読み込まれる。</b>逆に、親で起動しても子の Skill は見えない（この教材の検証結果）。だから各セクションは、それぞれのディレクトリで <code>claude</code> を起動する。</li><li>同名の Skill は Enterprise &gt; Personal &gt; Project の順で優先される（P5）。</li><li>「全作業で要るか？」が No なら Skill にする。全作業で要るなら CLAUDE.md、強制したいなら hooks（セクション 07）。</li></ul>
-<h2>うまくいかないとき</h2><ul class="pts"><li><code>claude</code> コマンドがない → Claude Code をインストールする。</li><li>Skill が一覧に出ない → 起動したディレクトリを確認する（<code>pwd</code>）。</li></ul>
+<h2>ここがポイント</h2><ul class="pts"><li>Skill は <code>&lt;名前&gt;/SKILL.md</code> を含むフォルダ。<code>.claude/skills/</code> に置けば、そのプロジェクトの全員が使える（Git で共有）。</li><li>この教材は<b>ブランチで教材を切り替える</b>。<code>main</code> が目次・手順書・題材・CI を持ち、<code>section-…</code> ブランチは <code>.claude/</code> の中身だけが違う。</li><li>同名の Skill は Enterprise &gt; Personal &gt; Project の順で優先される（P5）。</li><li>「全作業で要るか？」が No なら Skill にする。全作業で要るなら CLAUDE.md、強制したいなら hooks（セクション 07）。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li><code>claude</code> コマンドがない → Claude Code をインストールする。VS Code 拡張を使う場合は、拡張で新しい会話を開く。</li><li>Skill が一覧に出ない → <code>git branch --show-current</code> で、いまのブランチを確認する。</li><li>ブランチを切り替えたのに前の Skill が見える → 新しい会話で開き直す。</li></ul>
 <p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
 <div class="nav"><a href="../../index.html">← 目次</a><a href="../01-auto-invoke/index.html">01 自動で呼ばれる（/ なし） →</a></div>
 </div><script src="../assets/app.js"></script></body></html>

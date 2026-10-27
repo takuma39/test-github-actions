@@ -1,3 +1,4 @@
+<!-- このファイルは tools/handson-docs/generate.py で生成している。直接編集せず、content.py を直して再生成する -->
 <!doctype html>
 <html lang="ja">
 <head>
@@ -9,20 +10,20 @@
 <body><div class="wrap">
 <div class="crumb"><a href="../../index.html">Skills ハンズオン</a> / セクション 01</div>
 <h1>01　自動で呼ばれる（/ なし）</h1>
-<div class="meta"><span class="tag">所要 10分</span><span class="tag">資料 P2・P4・P7</span></div>
+<div class="meta"><span class="tag">資料 P2・P4・P7</span></div>
 <div class="goal"><b>このセクションのゴール</b><br>Skill の名前を言わずに「レビューして」「調査して」と頼むだけで、Claude が適切な Skill を選んで使うことを確かめる。</div>
-
 <h2>準備</h2>
-<p>リポジトリ直下から、次のコマンドでこのセクション専用の環境を起動する。</p>
-<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/01-auto-invoke &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
-<details open><summary>このセクションの中身</summary><pre><code>.claude/skills/
+<p>このセクションのブランチに切り替える。<code>.claude/</code> の中身が、このセクション用に入れ替わる。</p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>git switch section-01-auto-invoke</code></pre><button class="copy" type="button">コピー</button></div>
+<p class="note">前のセクションで書き換えたファイルがあると、切り替えに失敗したり、変更が持ち越されたりする。<code>git restore .</code> で元に戻してから切り替える。切り替えたあとは、<b>新しい会話（新しいセッション）</b>で Claude Code を開く。</p>
+<details open><summary>このセクションの中身（<code>.claude/</code> など）</summary><pre><code>.claude/skills/
 ├── local-review/SKILL.md   ローカルのファイルや差分をレビューする
 └── investigate/SKILL.md    コードを読み取り専用で調べる
 sample/                      題材（電卓）。わざと不備が入っている</code></pre></details>
 <h2>やってみる</h2><ol class="steps">
 <li><p class="step-t">見えている Skill を確認<label><input type="checkbox" data-step="1"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/skills</code></pre><button class="copy" type="button">コピー</button></div>
-<div class="expect"><b class="k">期待する結果</b>　<code>local-review</code> と <code>investigate</code> が Project として見える（直下の <code>pr-review</code> も見える）。</div>
+<div class="expect"><b class="k">期待する結果</b>　<code>local-review</code> と <code>investigate</code> が Project として見える。</div>
 </li>
 <li><p class="step-t">Skill 名を言わずに、レビューを頼む<label><input type="checkbox" data-step="2"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>sample/src/calculator.ts をレビューして</code></pre><button class="copy" type="button">コピー</button></div>
@@ -33,27 +34,27 @@ sample/                      題材（電卓）。わざと不備が入ってい
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>割り算の処理がどこにあるか調査して</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　<code>[investigate 起動]</code> が出て、<code>sample/src/calculator.ts</code> の行番号つきで報告される。<b>ファイルは編集されない</b>。</div>
 </li>
-<li><p class="step-t">（参考）サンプルに入っている不備<label><input type="checkbox" data-step="4"> 済み</label></p>
-<div class="expect"><b class="k">期待する結果</b>　題材の <code>sample/</code> には、レビューや調査で見つけてもらうために、<b>わざと不備を入れてある</b>（下の一覧）。レビュー結果に出てきたら、狙いどおり。</div>
-<p class="note"><code>average([])</code> は <code>NaN</code> を返す／<code>percentOf(x, 0)</code> は <code>Infinity</code> を返す（<code>divide</code> だけが 0 除算を検査していて一貫しない）／<code>parseNumber("abc")</code> は <code>NaN</code> を返す／テストは <code>add</code> と <code>divide</code> の正常系だけ（<b>テストが少ないのも意図</b>。「テスト不足」を指摘させるため。このサンプルは CI の対象外）。</p>
-</li>
-<li><p class="step-t">対象外の依頼では呼ばれない<label><input type="checkbox" data-step="5"> 済み</label></p>
+<li><p class="step-t">対象外の依頼では呼ばれない<label><input type="checkbox" data-step="4"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>こんにちは。今日の調子はどう？</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　どの Skill も起動しない（マーカーが出ない）。</div>
 </li>
-<li><p class="step-t">言い換えても呼ばれるか試す<label><input type="checkbox" data-step="6"> 済み</label></p>
+<li><p class="step-t">言い換えても呼ばれるか試す<label><input type="checkbox" data-step="5"> 済み</label></p>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>calculator.ts のコード、問題ないか見てくれる？</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>average はどこから呼ばれている？</code></pre><button class="copy" type="button">コピー</button></div>
 <div class="expect"><b class="k">期待する結果</b>　1つ目は <code>local-review</code>、2つ目は <code>investigate</code> が選ばれることが多い。</div>
 <p class="note">Claude が <b>description と依頼を照合</b>して選んでいる。毎回同じとは限らない（P9）。外れたら、言い換えて何度か試す。</p>
+</li>
+<li><p class="step-t">（参考）サンプルに入っている不備<label><input type="checkbox" data-step="6"> 済み</label></p>
+<div class="expect"><b class="k">期待する結果</b>　題材の <code>sample/</code> には、レビューや調査で見つけてもらうために、<b>わざと不備を入れてある</b>（下の一覧）。レビュー結果に出てきたら、狙いどおり。</div>
+<p class="note"><code>average([])</code> は <code>NaN</code> を返す／<code>percentOf(x, 0)</code> は <code>Infinity</code> を返す（<code>divide</code> だけが 0 除算を検査していて一貫しない）／<code>parseNumber("abc")</code> は <code>NaN</code> を返す／テストは <code>add</code> と <code>divide</code> の正常系だけ（<b>テストが少ないのも意図</b>。「テスト不足」を指摘させるため。この題材は CI の対象外）。</p>
 </li>
 </ol>
 <details><summary>local-review/SKILL.md の frontmatter（抜粋）</summary><pre><code>---
 name: local-review
 description: ローカルのファイル・未コミットの差分・ブランチの差分をレビューし、問題点を重要度付きで報告する。「レビューして」「コードを見て」「問題がないか確認して」と言われたときに使う。PR（プルリクエスト）のレビュー、コードの新規実装・修正には使わない。
 ---</code></pre></details>
-<h2>ここがポイント</h2><ul class="pts"><li>一度も Skill 名を打っていない。Claude は起動時に<b>全 Skill の description だけ</b>を読み、依頼と照合して選ぶ。</li><li>直下の <code>pr-review</code> も一覧に見えているが、「レビューして」には、ローカルのファイルを対象にした <code>local-review</code> が選ばれた（この教材での確認結果）。<code>local-review</code> の description に「PR のレビューには使わない」と書いてあるため。</li><li><code>investigate</code> には <code>allowed-tools: Read Grep Glob</code> を付けてある。調査の Skill が勝手にファイルを書き換えないようにする狙い（セクション 04・11 で詳しく）。</li></ul>
-<h2>うまくいかないとき</h2><ul class="pts"><li>起動しない → 新しいセッションで試す。同じ会話では前の文脈が残って結果に影響する。</li><li>起動マーカーが出ない → <code>/skills</code> に出ているか確認。出ていなければ、起動したディレクトリが違う。</li><li>結果が毎回違う → 仕様。LLM の判断なので、1回の成功で「うまくいった」と判断しない。</li></ul>
+<h2>ここがポイント</h2><ul class="pts"><li>一度も Skill 名を打っていない。Claude は起動時に<b>全 Skill の description だけ</b>を読み、依頼と照合して選ぶ。</li><li><code>local-review</code> の description には「PR のレビューには使わない」と書いてある。PR のレビューは、<code>main</code> の CI 用 Skill（<code>pr-review</code>）の担当、と役割を分けるため。</li><li><code>investigate</code> には <code>allowed-tools: Read Grep Glob</code> を付けてある。調査の Skill が勝手にファイルを書き換えないようにする狙い（セクション 04・11 で詳しく）。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>起動しない → 新しい会話で試す。同じ会話では前の文脈が残って結果に影響する。</li><li>起動マーカーが出ない → <code>/skills</code> に出ているか確認。出ていなければ、ブランチが違う（<code>git branch --show-current</code>）。</li><li>結果が毎回違う → 仕様。LLM の判断なので、1回の成功で「うまくいった」と判断しない。</li></ul>
 <p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
 <div class="nav"><a href="../00-overview/index.html">← 00 全体像と進め方</a><a href="../02-slash-invoke/index.html">02 / で呼ぶ（手動） →</a></div>
 </div><script src="../assets/app.js"></script></body></html>
