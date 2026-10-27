@@ -4,7 +4,7 @@
 
 ## 元データ（`claude/`）
 
-各セクションの `NN-xxx/claude/` が、そのセクション用のブランチの `.claude/` になる。**`.claude` とドットを付けないのは、`main` や他のブランチで Skill として読み込まれないようにするため。**
+各セクションの `NN-xxx/claude/` が、そのセクション用のブランチの `.claude/` になる。複数の元データを重ねて作るブランチもある（`branches.json` の `sources` に、重ねる順に並べる）。**`.claude` とドットを付けないのは、`main` や他のブランチで Skill として読み込まれないようにするため。**
 
 | 元データ | 作られるブランチ |
 | --- | --- |
@@ -13,8 +13,8 @@
 | `04-invocation-control/claude` | `section-04-invocation-control` |
 | `05-scripts/claude` | `section-05-scripts` |
 | `06-dynamic-fork/claude` | `section-06-dynamic-fork` |
-| `07-hooks/claude-skill-only` | `section-07a-skill-only` |
-| `07-hooks/claude` | `section-07b-hooks` |
+| `07-hooks/claude-common` | `section-07a-skill-only` |
+| `07-hooks/claude-common` + `07-hooks/claude-hooks` | `section-07b-hooks` |
 | `08-subagents/claude` | `section-08-subagents` |
 | `09-browser-e2e/claude` + `mcp.json`（→ `.mcp.json`） | `section-09-browser-e2e` |
 | `12-permissions/claude` | `section-12-permissions` |

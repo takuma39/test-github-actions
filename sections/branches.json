@@ -1,19 +1,69 @@
 {
   "base": "main",
   "branches": [
-    { "name": "section-01-auto-invoke", "source": "sections/01-auto-invoke/claude" },
-    { "name": "section-03-description", "source": "sections/03-description/claude" },
-    { "name": "section-04-invocation-control", "source": "sections/04-invocation-control/claude" },
-    { "name": "section-05-scripts", "source": "sections/05-scripts/claude" },
-    { "name": "section-06-dynamic-fork", "source": "sections/06-dynamic-fork/claude" },
-    { "name": "section-07a-skill-only", "source": "sections/07-hooks/claude-skill-only" },
-    { "name": "section-07b-hooks", "source": "sections/07-hooks/claude" },
-    { "name": "section-08-subagents", "source": "sections/08-subagents/claude" },
+    {
+      "name": "section-01-auto-invoke",
+      "sources": [
+        "sections/01-auto-invoke/claude"
+      ]
+    },
+    {
+      "name": "section-03-description",
+      "sources": [
+        "sections/03-description/claude"
+      ]
+    },
+    {
+      "name": "section-04-invocation-control",
+      "sources": [
+        "sections/04-invocation-control/claude"
+      ]
+    },
+    {
+      "name": "section-05-scripts",
+      "sources": [
+        "sections/05-scripts/claude"
+      ]
+    },
+    {
+      "name": "section-06-dynamic-fork",
+      "sources": [
+        "sections/06-dynamic-fork/claude"
+      ]
+    },
+    {
+      "name": "section-07a-skill-only",
+      "sources": [
+        "sections/07-hooks/claude-common"
+      ]
+    },
+    {
+      "name": "section-07b-hooks",
+      "sources": [
+        "sections/07-hooks/claude-common",
+        "sections/07-hooks/claude-hooks"
+      ]
+    },
+    {
+      "name": "section-08-subagents",
+      "sources": [
+        "sections/08-subagents/claude"
+      ]
+    },
     {
       "name": "section-09-browser-e2e",
-      "source": "sections/09-browser-e2e/claude",
-      "files": { "sections/09-browser-e2e/mcp.json": ".mcp.json" }
+      "sources": [
+        "sections/09-browser-e2e/claude"
+      ],
+      "files": {
+        "sections/09-browser-e2e/mcp.json": ".mcp.json"
+      }
     },
-    { "name": "section-12-permissions", "source": "sections/12-permissions/claude" }
+    {
+      "name": "section-12-permissions",
+      "sources": [
+        "sections/12-permissions/claude"
+      ]
+    }
   ]
 }
