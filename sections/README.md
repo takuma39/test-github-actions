@@ -30,3 +30,17 @@ python3 tools/handson-docs/generate.py
 ```
 
 手順書に載せるコード（07 の hooks など）は、元データのファイルから読み込むので、手で写さなくてよい。
+
+## ブランチの作り方・検証
+
+セクション用のブランチは、`main` と元データ（`claude/`）から、スクリプトで作る。**ブランチを手で編集しない。** 直したいときは `main` の元データを直し、PR でマージしてから、ブランチを作り直す。
+
+```bash
+git switch main && git pull          # main を最新にする
+python3 tools/build-branches.py      # ブランチを作る（既にあれば、main から作り直す。ローカルのみ）
+python3 tools/build-branches.py --check   # main と元データに一致しているか検証する
+```
+
+- ブランチは、`main` に 1 コミット足した形になる（`.claude/` の差し替えと、09 の `.mcp.json`）。`main` の `.claude/skills/pr-review` は、セクションのブランチには入らない
+- `--check` は、次の 3 つを見る。元データと内容が違う、`.claude/` と追加ファイル以外が `main` と違う、`main` の最新を取り込んでいない
+- 作り直したブランチを GitHub に push するときは、強制 push が必要になる（ブランチは生成物なので問題ない）。受講者は `git pull` ではなく、`git fetch` のあと `git switch` し直す
