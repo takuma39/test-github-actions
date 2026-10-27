@@ -33,6 +33,13 @@ jobs:
           node-version: 22.x
           cache: pnpm
 
+      # ハンズオンの手順書（HTML）は tools/handson-docs/ で生成している。
+      # 手で直した HTML や、再生成し忘れた変更があれば、ここで失敗させる
+      - name: Check generated handson docs
+        run: |
+          python3 tools/handson-docs/generate.py
+          git diff --exit-code -- index.html sections
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

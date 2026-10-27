@@ -20,6 +20,8 @@ ROOT = HERE.parents[1]
 OUT = ROOT / "sections"
 esc = html.escape
 
+GENERATED = "<!-- このファイルは tools/handson-docs/generate.py で生成している。直接編集せず、content.py を直して再生成する -->\n"
+
 MANIFEST = json.loads((OUT / "branches.json").read_text(encoding="utf-8"))
 KNOWN = {MANIFEST["base"]} | {b["name"] for b in MANIFEST["branches"]}
 
@@ -113,7 +115,7 @@ def switch(branch):
 def page(i, s):
     prev_s = SECTIONS[i - 1] if i > 0 else None
     next_s = SECTIONS[i + 1] if i < len(SECTIONS) - 1 else None
-    out = [f"""<!doctype html>
+    out = [GENERATED + f"""<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -192,7 +194,7 @@ def index():
             f'<div class="row"><div class="head"><span class="n">{s["id"][:2]}</span><span class="t">{s["title"]}</span>'
             f'<a class="open" href="sections/{s["id"]}/index.html">手順書を開く →</a></div>'
             f'<p class="g">{s["goal"].split("。")[0]}。</p>{cmds}</div>')
-    return f"""<!doctype html>
+    return GENERATED + f"""<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
