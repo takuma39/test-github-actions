@@ -9,12 +9,14 @@
 """
 import html
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from content import RESET_NOTE, SECTIONS  # noqa: E402
+from content import RESET_NOTE, SECTIONS, VERIFIED  # noqa: E402
 
 ROOT = HERE.parents[1]
 OUT = ROOT / "sections"
@@ -223,6 +225,21 @@ def index():
 """
 
 
+def warn_if_claude_version_changed():
+    """手元の Claude Code の版が、手順書で「確認した版」と違えば、再確認を促す（失敗にはしない）。"""
+    if not shutil.which("claude"):
+        return
+    try:
+        out = subprocess.run(["claude", "--version"], capture_output=True, text=True, timeout=15).stdout
+    except (OSError, subprocess.SubprocessError):
+        return
+    verified = VERIFIED.split()[-1]
+    if verified not in out:
+        print(f"[注意] 手元の Claude Code は {out.strip() or '不明'} で、手順書は {VERIFIED} で確認した内容です。"
+              "セクション 12 の手順 4・5（Read の deny と Bash）を再確認し、問題なければ content.py の VERIFIED を更新してください。",
+              file=sys.stderr)
+
+
 def main():
     unknown = sorted({b for s in SECTIONS for b in s["branches"]} - KNOWN)
     if unknown:
@@ -236,6 +253,7 @@ def main():
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(page(i, s), encoding="utf-8")
     print(f"generated {len(SECTIONS) + 1} pages")
+    warn_if_claude_version_changed()
 
 
 main()
