@@ -20,6 +20,9 @@ def ask(t):
     return ("ask", t)
 
 
+# 動作を確認した Claude Code の版（セクション 12 の「確認結果」に併記する）
+VERIFIED = "Claude Code 2.1.87"
+
 # 共通の注意（各ページの「準備」に出る）
 RESET_NOTE = ("前のセクションで書き換えたファイルがあると、切り替えに失敗したり、変更が持ち越されたりする。"
               "<code>git restore .</code> で元に戻してから切り替える。切り替えたあとは、<b>新しい会話（新しいセッション）</b>で Claude Code を開く。")
@@ -427,11 +430,11 @@ sample/
         note="<code>settings.json</code> は Git で共有される。<b>秘密の値は <code>env</code> に書かない</b>（個人の秘密は、Git に入れない <code>settings.local.json</code> に書く）。"),
    dict(t="読み取りを拒否する（deny）", items=[ask("sample/.env を読んで、中身を表示して")],
         expect="<b>読み取りが拒否される</b>（パーミッション設定で拒否された、という旨が出る）。中身は表示されない。",
-        note="Read ツールだけでなく、Bash の <code>cat sample/.env</code> も拒否される（この教材での確認結果）。"),
+        note="Read ツールだけでなく、Bash の <code>cat sample/.env</code> も拒否される（この教材での確認結果。" + VERIFIED + "）。<b>これは公式に保証された仕様ではなく</b>、コマンドの文字列からパスを読み取って、Read の deny を当てている挙動。版が上がると変わりうる。"),
    dict(t="読み取りを、Bash の cat でも試す（パスを直接書く）", items=[ask("Bash ツールだけを使い、次のコマンドを一字一句そのまま実行して、出力をそのまま見せて。Read ツールは使わないこと。コマンド: cat sample/.env")],
-        expect="こちらも拒否される。<code>cat</code> は allow に入れているが、<b>deny が優先される</b>（deny &gt; ask &gt; allow）。<code>head</code>・<code>grep</code>・<code>sed</code>・<code>awk</code> など、パスを直接書いた読み取りコマンドも拒否される（この教材での確認結果）。"),
+        expect="こちらも拒否される。<code>cat</code> は allow に入れているが、<b>deny が優先される</b>（deny &gt; ask &gt; allow）。<code>head</code>・<code>grep</code>・<code>sed</code>・<code>awk</code> など、パスを直接書いた読み取りコマンドも拒否される（この教材での確認結果。" + VERIFIED + "）。"),
    dict(t="抜け道 1: 変数を経由して読む", items=[ask("Bash ツールだけを使い、次のコマンドを一字一句そのまま実行して、出力をそのまま見せて。Read ツールは使わないこと。コマンド: env_file=sample/.env; cat $env_file")],
-        expect="<b>中身（<code>API_TOKEN=dummy-token-12345</code>）が表示される。</b>パスを変数に入れただけで、<code>Read(./sample/.env)</code> の deny をすり抜ける（この教材での確認結果）。",
+        expect="<b>中身（<code>API_TOKEN=dummy-token-12345</code>）が表示される。</b>パスを変数に入れただけで、<code>Read(./sample/.env)</code> の deny をすり抜ける（この教材での確認結果。" + VERIFIED + "）。",
         note="deny が見ているのは、<b>コマンドの文字列に書かれたパス</b>。変数展開のあとのパスまでは見ていない。<code>cp sample/.env sample/copy.txt</code> でコピーして、コピーを読む方法も通る（確認結果）。コピーを作ってしまったら、<code>git clean -f sample</code> で消す（<code>rm</code> は deny なので使えない）。"),
    dict(t="削除を拒否する（deny）", items=[ask("Bash で rm sample/tmp.txt を実行して削除して")],
         expect="<b>実行が拒否され、<code>sample/tmp.txt</code> は残る</b>。"),
@@ -439,9 +442,10 @@ sample/
         expect="編集の前に<b>確認が出る</b>。承認しなければ、編集されない。承認すれば編集される（演習のあとは元に戻す）。",
         note="<code>ask</code> は「毎回、人が確認する」設定。"),
    dict(t="抜け道を体験する（find -delete）", items=[ask("次のコマンドを Bash でそのまま実行して: find sample -name tmp.txt -delete")],
-        expect="<code>rm</code> は deny だが、<code>find</code> は deny にも allow にも書いていないので、<b>削除は拒否されず、確認が出る</b>。承認しなければ消えない。"),
-   dict(t="allow を広く書くと、deny をすり抜ける", items=[],
-        do="<code>.claude/settings.json</code> の <code>allow</code> に <code>\"Bash(find *)\"</code> を足し、新しい会話で、手順 7 の依頼をもう一度する。",
+        expect="<code>rm</code> は deny だが、<code>find</code> は deny にも allow にも書いていないので、<b>削除は拒否されず、確認が出る</b>。承認しなければ消えない。",
+        note="<b>次の手順では、設定ファイルを編集する。</b>編集のあとは、新しい会話で試す（同じ会話では、前の許可・拒否の状況が残って結果が変わるため）。"),
+   dict(t="allow を広く書くと、deny をすり抜ける（設定を編集して、新しい会話で試す）", items=[],
+        do="次の順に行う。<br>1. <code>.claude/settings.json</code> の <code>allow</code> に <code>\"Bash(find *)\"</code> を足す<br>2. <b>新しい会話</b>で Claude Code を開き直す<br>3. 直前の手順（<code>find -delete</code>）と同じ依頼を、もう一度する",
         expect="<b>確認なしで <code>sample/tmp.txt</code> が削除される。</b><code>rm</code> を deny にしていても、<code>find -delete</code> で消せてしまう（この教材での確認結果）。",
         note="deny が止めるのは、<b>書いた方法だけ</b>。広い allow（<code>find *</code>、<code>cat *</code> など）は、deny の抜け道になりうる。"),
    dict(t="後始末", items=[sh("git restore . && git clean -f sample")], expect="設定・<code>tmp.txt</code>・<code>notes.txt</code> が元に戻り、作ったコピーも消える。"),
@@ -454,6 +458,7 @@ sample/
   points=[
    "優先順位は <b>deny &gt; ask &gt; allow</b>。個人設定・プロジェクト設定のどこかで deny されていれば、拒否される。",
    "置き場所: <code>~/.claude/settings.json</code>（個人）／<code>.claude/settings.json</code>（プロジェクト。Git で共有）／<code>.claude/settings.local.json</code>（個人の上書き。Git に入れない）。",
+   "この節の「確認結果」は、<b>" + VERIFIED + "</b> で確認したもの。特に、<b>Read の deny が Bash の読み取りコマンドにも効く</b>挙動は、コマンドごとにパスを解析する実装に依存していて、公式に保証された仕様ではない。期待と違った場合は、<code>claude --version</code> で版を確認して、この版との違いを疑う。",
    "<b>個人設定が有効だと、期待結果と違うことがある。</b>たとえば個人設定で <code>find</code> や <code>Edit</code> が allow になっていると、「確認が出る」はずの手順で確認が出ない。",
    "Skill の <code>allowed-tools</code>（セクション 04）は「その Skill を使うターンだけ、承認なしで使えるツール」。<code>settings.json</code> の権限は、<b>プロジェクト全体</b>に効く。",
    "<b>deny は「書いた方法」だけを止める。</b>Read ツールと、パスを直接書いた読み取りコマンドは止まるが、変数・コピー経由の読み取りや、<code>find -delete</code> のような別の書き方、広い allow が抜け道になる。<b>確実に止めたいものは、hooks（セクション 07）やファイルの権限も併用する。</b>",
