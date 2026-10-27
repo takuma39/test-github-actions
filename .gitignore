@@ -6,3 +6,7 @@ coverage/
 
 # Playwright MCP が実行時に生成するスナップショット
 .playwright-mcp/
+
+# 個人の上書き設定と、hook の実行記録
+.claude/settings.local.json
+.claude/hooks/edit.log

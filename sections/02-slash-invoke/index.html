@@ -11,11 +11,10 @@
 <h1>02　/ で呼ぶ（手動）</h1>
 <div class="meta"><span class="tag">資料 P4・P10</span></div>
 <div class="goal"><b>このセクションのゴール</b><br>同じ Skill を、<code>/名前</code> で明示的に呼ぶ。自動起動との違い（確実に起動する・引数を渡せる）を確かめる。</div>
-
 <h2>準備</h2>
-<p>プロジェクトルートから、次のコマンドでこのセクション専用の環境を起動する。</p>
-<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/02-slash-invoke &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
-<details open><summary>このセクションの中身</summary><pre><code>.claude/skills/
+<p>セクション 01 と<b>同じブランチ</b>（<code>section-01-auto-invoke</code>）のまま続ける。切り替えは要らない。</p>
+<p class="note">前のセクションで書き換えたファイルがあると、切り替えに失敗したり、変更が持ち越されたりする。<code>git restore .</code> で元に戻してから切り替える。切り替えたあとは、<b>新しい会話（新しいセッション）</b>で Claude Code を開く。</p>
+<details open><summary>このセクションの中身（<code>.claude/</code> など）</summary><pre><code>.claude/skills/
 ├── local-review/SKILL.md   01 と同じ Skill
 └── investigate/SKILL.md    01 と同じ Skill</code></pre></details>
 <h2>やってみる</h2><ol class="steps">
@@ -37,7 +36,7 @@
 </ol>
 <h2>整理</h2><table><thead><tr><th></th><th>自動（01）</th><th>手動（02）</th></tr></thead><tbody><tr><td>起動のきっかけ</td><td>依頼の内容と description の一致</td><td><code>/名前</code> を打つ</td></tr><tr><td>確実さ</td><td>外れることがある</td><td>必ず起動する</td></tr><tr><td>引数</td><td>文章から Claude が読み取る</td><td><code>$ARGUMENTS</code> に入る</td></tr><tr><td>向いている作業</td><td>規約・レビュー手順など</td><td>デプロイ・コミットなど副作用のある操作（04）</td></tr></tbody></table>
 <h2>ここがポイント</h2><ul class="pts"><li>Skill は「Claude が自動で使う知識」でもあり、「人が <code>/名前</code> で呼ぶコマンド」でもある。旧 <code>commands/</code> は Skill に統合済み（P10）。</li></ul>
-<h2>うまくいかないとき</h2><ul class="pts"><li>候補に出ない → <code>/skills</code> で確認。起動したディレクトリが違う可能性がある。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>候補に出ない → <code>/skills</code> で確認。ブランチが違う可能性がある（<code>git branch --show-current</code>）。</li></ul>
 <p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
 <div class="nav"><a href="../01-auto-invoke/index.html">← 01 自動で呼ばれる（/ なし）</a><a href="../03-description/index.html">03 description で決まる →</a></div>
 </div><script src="../assets/app.js"></script></body></html>

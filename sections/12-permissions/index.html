@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12 settings.json で権限を決める | Skills ハンズオン</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body><div class="wrap">
+<div class="crumb"><a href="../../index.html">Skills ハンズオン</a> / セクション 12</div>
+<h1>12　settings.json で権限を決める</h1>
+<div class="meta"><span class="tag">資料 P10・P12</span></div>
+<div class="goal"><b>このセクションのゴール</b><br><code>settings.json</code> の <code>env</code>（変数）と <code>permissions</code>（許可・確認・禁止）を使い、Claude が「読めるもの」「消せるもの」を決める。Skill・hooks とは別の層の制御を体験する。</div>
+<h2>準備</h2>
+<p>このセクションのブランチに切り替える。<code>.claude/</code> の中身が、このセクション用に入れ替わる。</p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>git switch section-12-permissions</code></pre><button class="copy" type="button">コピー</button></div>
+<p class="note">前のセクションで書き換えたファイルがあると、切り替えに失敗したり、変更が持ち越されたりする。<code>git restore .</code> で元に戻してから切り替える。切り替えたあとは、<b>新しい会話（新しいセッション）</b>で Claude Code を開く。</p>
+<details open><summary>このセクションの中身（<code>.claude/</code> など）</summary><pre><code>.claude/settings.json
+├── env           HANDSON_GREETING を定義
+└── permissions   allow（echo・ls・cat）/ ask（notes.txt の編集）/ deny（.env の読み取り・rm）
+sample/
+├── .env          ダミーの値（偽物）。読み取りの拒否を試す
+├── tmp.txt       削除の拒否を試す
+└── notes.txt     編集の確認（ask）を試す</code></pre></details>
+<h2>やってみる</h2><ol class="steps">
+<li><p class="step-t">いまの権限を見る<label><input type="checkbox" data-step="1"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>/permissions</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　allow・ask・deny に、<code>.claude/settings.json</code> に書いた規則が並ぶ。個人設定（<code>~/.claude/settings.json</code>）の規則も混ざって見える。</div>
+</li>
+<li><p class="step-t">変数（env）を読ませる<label><input type="checkbox" data-step="2"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>環境変数 HANDSON_GREETING の値を、Bash の echo で表示して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>こんにちは from settings.json</code> が表示される。<code>settings.json</code> の <code>env</code> に書いた変数が、Claude の実行する Bash に渡っている。</div>
+<p class="note"><code>settings.json</code> は Git で共有される。<b>秘密の値は <code>env</code> に書かない</b>（個人の秘密は、Git に入れない <code>settings.local.json</code> に書く）。</p>
+</li>
+<li><p class="step-t">読み取りを拒否する（deny）<label><input type="checkbox" data-step="3"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>sample/.env を読んで、中身を表示して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<b>読み取りが拒否される</b>（パーミッション設定で拒否された、という旨が出る）。中身は表示されない。</div>
+<p class="note">Read ツールだけでなく、Bash の <code>cat sample/.env</code> も拒否される（この教材での確認結果）。</p>
+</li>
+<li><p class="step-t">読み取りを、Bash の cat でも試す<label><input type="checkbox" data-step="4"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>次のコマンドを Bash でそのまま実行して、出力をそのまま見せて: cat sample/.env</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　こちらも拒否される。<code>cat</code> は allow に入れているが、<b>deny が優先される</b>（deny &gt; ask &gt; allow）。</div>
+</li>
+<li><p class="step-t">削除を拒否する（deny）<label><input type="checkbox" data-step="5"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>Bash で rm sample/tmp.txt を実行して削除して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<b>実行が拒否され、<code>sample/tmp.txt</code> は残る</b>。</div>
+</li>
+<li><p class="step-t">確認を出させる（ask）<label><input type="checkbox" data-step="6"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>sample/notes.txt の末尾に「追記」と書き足して</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　編集の前に<b>確認が出る</b>。承認しなければ、編集されない。承認すれば編集される（演習のあとは元に戻す）。</div>
+<p class="note"><code>ask</code> は「毎回、人が確認する」設定。</p>
+</li>
+<li><p class="step-t">抜け道を体験する（find -delete）<label><input type="checkbox" data-step="7"> 済み</label></p>
+<div class="cmd ask"><span class="lab">Claude に入力</span><pre><code>次のコマンドを Bash でそのまま実行して: find sample -name tmp.txt -delete</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　<code>rm</code> は deny だが、<code>find</code> は deny にも allow にも書いていないので、<b>削除は拒否されず、確認が出る</b>。承認しなければ消えない。</div>
+</li>
+<li><p class="step-t">allow を広く書くと、deny をすり抜ける<label><input type="checkbox" data-step="8"> 済み</label></p>
+<p class="do"><code>.claude/settings.json</code> の <code>allow</code> に <code>"Bash(find *)"</code> を足し、新しい会話で、手順 7 の依頼をもう一度する。</p>
+<div class="expect"><b class="k">期待する結果</b>　<b>確認なしで <code>sample/tmp.txt</code> が削除される。</b><code>rm</code> を deny にしていても、<code>find -delete</code> で消せてしまう（この教材での確認結果）。</div>
+<p class="note">deny が止めるのは、<b>書いた方法だけ</b>。広い allow（<code>find *</code>、<code>cat *</code> など）は、deny の抜け道になりうる。</p>
+</li>
+<li><p class="step-t">後始末<label><input type="checkbox" data-step="9"> 済み</label></p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>git restore .</code></pre><button class="copy" type="button">コピー</button></div>
+<div class="expect"><b class="k">期待する結果</b>　設定・<code>tmp.txt</code>・<code>notes.txt</code> が元に戻る。</div>
+</li>
+</ol>
+<h2>整理</h2><table><thead><tr><th>区分</th><th>意味</th><th>このブランチの例</th></tr></thead><tbody><tr><td>allow</td><td>確認なしで実行できる</td><td><code>Bash(echo *)</code>、<code>Bash(ls *)</code>、<code>Bash(cat *)</code></td></tr><tr><td>ask</td><td>毎回、人が確認する</td><td><code>Edit(./sample/notes.txt)</code></td></tr><tr><td>deny</td><td>頼まれても実行しない（最優先）</td><td><code>Read(./sample/.env)</code>、<code>Bash(rm *)</code></td></tr></tbody></table>
+<h2>ここがポイント</h2><ul class="pts"><li>優先順位は <b>deny &gt; ask &gt; allow</b>。個人設定・プロジェクト設定のどこかで deny されていれば、拒否される。</li><li>置き場所: <code>~/.claude/settings.json</code>（個人）／<code>.claude/settings.json</code>（プロジェクト。Git で共有）／<code>.claude/settings.local.json</code>（個人の上書き。Git に入れない）。</li><li><b>個人設定が有効だと、期待結果と違うことがある。</b>たとえば個人設定で <code>find</code> や <code>Edit</code> が allow になっていると、「確認が出る」はずの手順で確認が出ない。</li><li>Skill の <code>allowed-tools</code>（セクション 04）は「その Skill を使うターンだけ、承認なしで使えるツール」。<code>settings.json</code> の権限は、<b>プロジェクト全体</b>に効く。</li><li>権限でも完全には守れない。<code>find -delete</code> のような別の書き方や、広い allow が抜け道になる。<b>確実に止めたいものは、hooks（セクション 07）も併用する。</b></li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>拒否されない → 個人設定で allow されていないか確認する（<code>/permissions</code>）。新しい会話で開き直す。</li><li>確認が出ない → <code>ask</code> の規則が効いているか、<code>/permissions</code> で確認する。<code>--permission-mode</code> を変えていると、確認が省かれることがある。</li></ul>
+<p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
+<div class="nav"><a href="../11-safety/index.html">← 11 Skill を守る（監査）</a><a href="../../index.html">目次へ →</a></div>
+</div><script src="../assets/app.js"></script></body></html>

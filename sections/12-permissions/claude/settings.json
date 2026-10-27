@@ -1,0 +1,19 @@
+{
+  "env": {
+    "HANDSON_GREETING": "こんにちは from settings.json"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(echo *)",
+      "Bash(ls *)",
+      "Bash(cat *)"
+    ],
+    "ask": [
+      "Edit(./sample/notes.txt)"
+    ],
+    "deny": [
+      "Read(./sample/.env)",
+      "Bash(rm *)"
+    ]
+  }
+}

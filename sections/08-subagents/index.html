@@ -11,11 +11,11 @@
 <h1>08　sub-agent と並行実行</h1>
 <div class="meta"><span class="tag">資料 P5・P10</span></div>
 <div class="goal"><b>このセクションのゴール</b><br>Skill から sub-agent を呼び、<b>レビューと調査を並行</b>で走らせる。Skill を sub-agent に渡す方法（<code>skills:</code>）も確かめる。</div>
-
 <h2>準備</h2>
-<p>プロジェクトルートから、次のコマンドでこのセクション専用の環境を起動する。</p>
-<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>cd sections/08-subagents &amp;&amp; claude</code></pre><button class="copy" type="button">コピー</button></div>
-<details open><summary>このセクションの中身</summary><pre><code>.claude/agents/
+<p>このセクションのブランチに切り替える。<code>.claude/</code> の中身が、このセクション用に入れ替わる。</p>
+<div class="cmd sh"><span class="lab">ターミナル</span><pre><code>git switch section-08-subagents</code></pre><button class="copy" type="button">コピー</button></div>
+<p class="note">前のセクションで書き換えたファイルがあると、切り替えに失敗したり、変更が持ち越されたりする。<code>git restore .</code> で元に戻してから切り替える。切り替えたあとは、<b>新しい会話（新しいセッション）</b>で Claude Code を開く。</p>
+<details open><summary>このセクションの中身（<code>.claude/</code> など）</summary><pre><code>.claude/agents/
 ├── reviewer.md            レビュー担当（skills: review-rules）
 └── investigator.md        調査担当（skills: investigate-rules）
 .claude/skills/
@@ -41,7 +41,7 @@
 </ol>
 <h2>整理</h2><table><thead><tr><th></th><th>Skill → sub-agent（この節）</th><th>context: fork（06）</th></tr></thead><tbody><tr><td>向き</td><td>sub-agent の定義側が Skill を<b>持つ</b>（<code>skills:</code>）</td><td>Skill 側が sub-agent を<b>指定する</b>（<code>agent:</code>）</td></tr><tr><td>使いどころ</td><td>役割（レビュー担当など）に、規約を持たせたい</td><td>1 つの調査手順を、独立して実行したい</td></tr><tr><td>並行実行</td><td>親が複数を同時に起動できる</td><td>1 つの Skill につき 1 つ</td></tr></tbody></table>
 <h2>ここがポイント</h2><ul class="pts"><li><code>disable-model-invocation: true</code> の Skill は、<code>skills:</code> では sub-agent に渡せない（P5）。そのため手動専用の <code>parallel-check</code> は、渡す側ではなく、sub-agent を呼ぶ側にしてある。渡す側の <code>review-rules</code> などは <code>user-invocable: false</code> の背景知識にしている。</li><li><code>tools: Read, Grep, Glob</code> で、sub-agent に使わせるツールを読み取り専用に絞っている。</li><li><b>独立した作業は並行にできる</b>が、同じファイルを編集する作業を並行にすると衝突する。今回は両方とも読み取り専用。</li></ul>
-<h2>うまくいかないとき</h2><ul class="pts"><li>2 つが順番に動く → <code>parallel-check</code> の本文に「同じターンで同時に」と書いてある。それでも順番になるときは、もう一度頼む。</li><li><code>/agents</code> に出ない → このディレクトリで起動しているか確認。</li></ul>
+<h2>うまくいかないとき</h2><ul class="pts"><li>2 つが順番に動く → <code>parallel-check</code> の本文に「同じターンで同時に」と書いてある。それでも順番になるときは、もう一度頼む。</li><li><code>/agents</code> に出ない → ブランチが <code>section-08-subagents</code> か確認する。</li></ul>
 <p class="note">LLM の判断で動くため、結果は毎回同じとは限らない。「期待する結果」はこの教材で確認した例。違う結果になっても、言い換えて何度か試す。</p>
 <div class="nav"><a href="../07-hooks/index.html">← 07 hooks で強制する</a><a href="../09-browser-e2e/index.html">09 ブラウザ打鍵（MCP） →</a></div>
 </div><script src="../assets/app.js"></script></body></html>
